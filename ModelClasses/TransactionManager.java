@@ -49,18 +49,16 @@ public class TransactionManager {
     }
 
     public static void deleteTransaction(){
-        //initialise a hashmap and arraylist
-        transactions = new HashMap<>();
-        transaction = new ArrayList<>();
         Scanner sc = new Scanner(System.in);
         System.out.println("Enter the month and year you want to delete the transaction:(as JUNE 2000)");
         //key to access hashmap
-        String key = sc.next();
+        String key = sc.nextLine();
+        while(key.isEmpty()) key = sc.nextLine();
         //check whether month and year are correct and contains the transaction.
         if (!transactions.containsKey(key))
             System.out.println("Error! Invalid Transaction.Please check the details you entered.");
         else {
-            ArrayList<Transaction> allTransactions;
+            ArrayList<Transaction> allTransactions = new ArrayList<>();
             allTransactions= transactions.get(key);
             //print and get all transactions of month
             for (int i = 0; i < allTransactions.size(); i++)
@@ -74,31 +72,35 @@ public class TransactionManager {
         }
     }
     public static void editTransaction(){
-        transactions = new HashMap<>();
-        transaction = new ArrayList<>();
         Scanner sc = new Scanner(System.in);
         System.out.println("Enter the month and year you want to edit transaction:(as JUNE 2000)");
         String key = sc.nextLine();
         //get user input otherwise wont continue
         while(key.isEmpty()) key = sc.nextLine();
-        ArrayList<Transaction> allTransactions;
-        allTransactions= transactions.get(key);
-
-        //print and get all transactions of month
-        for (Transaction allTransaction : allTransactions) {
-            System.out.println(allTransaction);
+        if (!transactions.containsKey(key)){
+            System.out.println("incorrect details entered!");
         }
-        System.out.print("Choose from above transactions : ");
-        int choice = sc.nextInt();
-        Transaction transaction1 = allTransactions.get(choice-1);
-        System.out.println("Enter new amount of transaction:");
-        transaction1.amount = sc.nextFloat();
+        else {
+            ArrayList<Transaction> allTransactions = new ArrayList<>();
+            allTransactions= transactions.get(key);
 
-        System.out.print("Enter new Date (yyyy-mm-dd): ");
-        transaction1.date = sc.next();
+            //print and get all transactions of month
+            for (Transaction allTransaction : allTransactions) {
+                System.out.println(allTransaction);
+            }
+            System.out.print("Choose from above transactions : ");
+            int choice = sc.nextInt();
+            Transaction transaction1 = allTransactions.get(choice - 1);
+            System.out.println("Enter new amount of transaction:");
+            transaction1.amount = sc.nextFloat();
 
-        System.out.print("Enter new info: ");
-        transaction1.info = sc.next();
+            System.out.print("Enter new Date (yyyy-mm-dd): ");
+            transaction1.date = sc.next();
+
+            System.out.print("Enter new info: ");
+            transaction1.info = sc.next();
+            System.out.println("Transaction updated successfully!");
+        }
     }
     public static void detailOfTransactionByMonth(){
         transactions = new HashMap<>();
@@ -106,26 +108,39 @@ public class TransactionManager {
         Scanner sc = new Scanner(System.in);
         System.out.println("Enter the month and year you want to see details of transaction:(as JUNE 2000)");
         String key = sc.nextLine();
+        while(key.isEmpty()) key = sc.nextLine();
         if (!transactions.containsKey(key)){
             System.out.println("No transactions in given month! Please try again with different details.");
         }
-        ArrayList<Transaction> allTransactions = transactions.get(key);
-        for (int i=0;i< allTransactions.size();i++) System.out.println((i + 1) + ". " + allTransactions.get(i));
+        else {
+            ArrayList<Transaction> allTransactions = new ArrayList<>();
+            allTransactions= transactions.get(key);
+            for (int i=0;i< allTransactions.size();i++)
+                System.out.println((i + 1) + ". " + allTransactions.get(i));
+        }
     }
     public static void summary(){
         transactions = new HashMap<>();
         transaction = new ArrayList<>();
         Scanner sc = new Scanner(System.in);
         System.out.println("Enter the month and year you want to see details of transaction:(as JUNE 2000)");
-        String key = sc.next();
+        String key = sc.nextLine();
+        while(key.isEmpty()) key = sc.nextLine();
         //calculate income and overall savings
         float expends=0;
         float earning =0;
-        ArrayList<Transaction> allTransactions = transactions.get(key);
-        for (Transaction allTransaction : allTransactions) {
-            if (allTransaction.transactionType == TransactionType.TYPE_INCOME) earning += allTransaction.amount;
-            else expends += allTransaction.amount;
+        if (!transactions.containsKey(key)){
+            System.out.println("No transactions in given month! Please try again with different details.");
         }
-        System.out.println("Earned: " + earning + "\nExpends: " + expends + "\nOverall savings: " + (earning - expends) );
-    }
+        else {
+            ArrayList<Transaction> allTransactions = new ArrayList<>();
+            allTransactions= transactions.get(key);
+            for (Transaction allTransaction : allTransactions) {
+                if (allTransaction.transactionType == TransactionType.TYPE_INCOME) earning += allTransaction.amount;
+                else expends += allTransaction.amount;
+            }
+            System.out.println("Earned: " + earning + "\nExpends: " + expends + "\nOverall savings: " + (earning - expends) );
+
+        }
+        }
 }
